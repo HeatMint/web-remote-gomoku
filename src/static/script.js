@@ -1,6 +1,6 @@
 window.onload = function () {
     //initial board and variables
-    var y = window.screen.height>=window.screen.width?window.screen.width*0.8:window.screen.height*0.8;
+    var y = window.screen.height * window.devicePixelRatio>=window.screen.width * window.devicePixelRatio?window.screen.width*0.65 * window.devicePixelRatio:window.screen.height*0.65 * window.devicePixelRatio;
     var gamey = Math.floor(y);
     var border = Math.round(gamey/20);
     var between = Math.floor((gamey-2*border)/14);
