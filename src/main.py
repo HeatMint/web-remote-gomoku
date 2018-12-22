@@ -3,13 +3,15 @@ from flask import send_file
 from flask import redirect
 from flask import request
 
-from tornado.wsgi import WSGIContainer
-from tornado.httpserver import HTTPServer
-from tornado.ioloop import IOLoop
+from flask_socketio import SocketIO
+from flask_socketio import send, emit
 
 
 app = Flask(__name__)
+socketio = SocketIO(app)
 
+
+users=[]
 
 @app.route('/<path:path>')
 def statics(path):
@@ -22,19 +24,30 @@ def statics(path):
             return redirect("/404")
 
 
-#develop server
-'''app.run(
-    port=80,
-    debug=True
-)'''
+def ack():
+    print "sucess"
 
-def main():
-    try:
-        http_server = HTTPServer(WSGIContainer(app))
-        http_server.listen(5000)
-        IOLoop.instance().start()
-    except Exception:
-        main()
-        print("restart!")
 
-main()
+@socketio.on('connect')
+def connect():
+    sid = request.sid
+    users.append(sid)
+    emit('sid',sid)
+    print(users)
+
+
+@socketio.on('disconnect')
+def disconnect():
+    users.remove(request.sid)
+    print(users)
+
+
+@socketio.on('go')
+def go(place):
+    print(place)
+    print(place['x'],place['y'])
+    for i in users:
+        emit('step',place,room=i)
+
+
+socketio.run(app)

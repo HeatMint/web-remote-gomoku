@@ -1,4 +1,10 @@
 window.onload = function () {
+    socket = io.connect('http://' + 'localhost' + ':' + '5000');
+    socket.emit('connect','data');
+    socket.on('step', function(info) {
+        walk(info.x,info.y);
+    });
+
     //initial board and variables
     var y = window.screen.height * window.devicePixelRatio>=window.screen.width * window.devicePixelRatio?window.screen.width*0.65 * window.devicePixelRatio:window.screen.height*0.65 * window.devicePixelRatio;
     var gamey = Math.floor(y);
@@ -71,6 +77,8 @@ window.onload = function () {
         aby = Math.round(position.y/between);
         if(abx<15 && aby<15){
             walk(abx,aby)
+            var place={x:abx,y:aby}
+            socket.emit('go',place)
         }
         console.log(abx,aby)
     });
