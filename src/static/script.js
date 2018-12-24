@@ -1,5 +1,5 @@
 window.onload = function () {
-    socket = io.connect('http://' + 'localhost' + ':' + '5000');
+    socket = io.connect('http://' + 'localhost' + ':' + '100/socket');
     socket.emit('connect','data');
     socket.on('step', function(info) {
         walk(info.x,info.y);
