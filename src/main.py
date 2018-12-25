@@ -9,9 +9,16 @@ from flask_socketio import send, emit
 
 app = Flask(__name__)
 socketio = SocketIO(app)
-
+color=0
 
 users=[]
+row=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+board=[]
+from copy import deepcopy
+for i in xrange(0,15):
+    board.append(deepcopy(row))
+print(len(board))
+
 
 @app.route('/')
 def index():
@@ -23,6 +30,8 @@ def connect():
     sid = request.sid
     users.append(sid)
     emit('sid',sid)
+    emit('init',board)
+    print board
     print(users)
 
 
@@ -34,10 +43,24 @@ def disconnect():
 
 @socketio.on('go',namespace='/socket')
 def go(place):
+    global color
     print(place)
-    print(place['x'],place['y'])
+    x=place['x']
+    y=place['y']
+    global board
+    board[x][y] = color
+    color=(color+1)%2
     for i in users:
         emit('step',place,room=i)
+
+@socketio.on('reset',namespace='/socket')
+def reset():
+    row = [-1, -1, -1, -1, -1]
+    board = []
+    for i in xrange(0, 15):
+        board.append(deepcopy(row))
+    emit('init',board)
+    print(len(board))
 
 
 @app.route('/<path:path>')
