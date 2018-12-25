@@ -53,14 +53,17 @@ def go(place):
     for i in users:
         emit('step',place,room=i)
 
+
 @socketio.on('reset',namespace='/socket')
-def reset():
+def reset(password):
     row = [-1, -1, -1, -1, -1]
+    global board
     board = []
     for i in xrange(0, 15):
         board.append(deepcopy(row))
     emit('init',board)
-    print(len(board))
+    print(board)
+    print('reset')
 
 
 @app.route('/<path:path>')

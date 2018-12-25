@@ -48,6 +48,7 @@ window.onload = function () {
     });
     var mathboard=[];
     socket.on('init',function (board) {
+        console.log('reseeeet!!!')
         mathboard=board;
         console.log(mathboard);
         for(var indexx in mathboard){
@@ -58,6 +59,18 @@ window.onload = function () {
             }
         }
     });
+
+    function reset(){
+        socket.emit('reset','')
+    }
+
+    var resetdiv=document.getElementById('reset');
+    var resetbutton = document.createElement('input');
+    resetbutton.type = 'button';
+    resetbutton.onclick = reset;
+    resetbutton.value='delete';
+    resetdiv.appendChild(resetbutton);
+
     //initial completed, start llistening to click event
 
     function drawq(x,y,color){
