@@ -28,7 +28,7 @@ def connect():
     sid = request.sid
     users.append(sid)
     emit('sid', sid)
-    emit('init', board)
+    emit('init', [step_by_step,board])
     print board
     print(users)
 
@@ -45,11 +45,14 @@ def disconnect():
 @socketio.on('go', namespace='/socket')
 def go(place):
     global color
+    global step_by_step
     print(place)
     x = place['x']
     y = place['y']
     global board
     board[x][y] = color
+    step_by_step.append([x,y])
+    print(step_by_step)
     color = (color + 1) % 2
     for i in users:
         emit('step', place, room=i)
@@ -57,12 +60,12 @@ def go(place):
 
 @socketio.on('reset', namespace='/socket')
 def reset(password):
-    row = [-1, -1, -1, -1, -1]
+    row = [-1, -1, -1, -1, -1,-1, -1, -1, -1, -1,-1, -1, -1, -1, -1]
     global board
     board = []
     for i in xrange(0, 15):
         board.append(deepcopy(row))
-    emit('init', board)
+    emit('init', [step_by_step,board])
     print(board)
     print('reset')
 

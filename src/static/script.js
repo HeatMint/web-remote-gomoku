@@ -7,6 +7,7 @@ window.onload = function () {
     var colors=['black','white'];
     var round=0;
     var mathboard=[];
+    var stepbystep=[];
 
     var board = document.getElementById('board');
     var canvas = document.createElement('canvas');
@@ -65,16 +66,19 @@ window.onload = function () {
         walk(info.x,info.y);
     });
 
-    socket.on('init',function (board) {
+    function walk(x,y) {
+        drawq(x,y,colors[round]);
+        round = (round + 1)%2;
+    }
+
+    socket.on('init',function (steps) {
         console.log('reseeeet!!!')
-        mathboard=board;
-        console.log(mathboard);
-        for(var indexx in mathboard){
-            for(var indexy in mathboard[indexx]){
-                if(mathboard[indexx][indexy] !=-1){
-                    walk(indexx,indexy);
-                }
-            }
+        stepbystep=steps[0];
+        mathboard=steps[1]
+        console.log(mathboard)
+        console.log(stepbystep);
+        for(var index in stepbystep){
+            walk(stepbystep[index][0],stepbystep[index][1])
         }
     });
     //socket listener end
@@ -90,10 +94,6 @@ window.onload = function () {
         ext.closePath();
     }
     //graphics end
-    function walk(x,y) {
-        drawq(x,y,colors[round]);
-        round = (round + 1)%2;
-    }
 
 
     //clicking event listener
