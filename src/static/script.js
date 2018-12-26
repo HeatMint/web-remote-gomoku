@@ -6,6 +6,7 @@ window.onload = function () {
     var between = Math.floor((gamey-2*border)/14);
     var colors=['black','white'];
     var round=0;
+    var mathboard=[];
 
     var board = document.getElementById('board');
     var canvas = document.createElement('canvas');
@@ -25,10 +26,12 @@ window.onload = function () {
     }
 
     function converter(x) {
+        //function not nly used to init
         return (x)*between+border;
     }
 
     function drawc(x,y){
+        //function not nly used to init
         ext.beginPath();
         ext.arc(converter(x), converter(y),Math.floor(between/5),0,2*Math.PI);
         ext.fill();
@@ -43,22 +46,6 @@ window.onload = function () {
 
     socket = io.connect('http://' + 'localhost' + ':' + '100/socket');
     socket.emit('connect','data');
-    socket.on('step', function(info) {
-        walk(info.x,info.y);
-    });
-    var mathboard=[];
-    socket.on('init',function (board) {
-        console.log('reseeeet!!!')
-        mathboard=board;
-        console.log(mathboard);
-        for(var indexx in mathboard){
-            for(var indexy in mathboard[indexx]){
-                if(mathboard[indexx][indexy] !=-1){
-                    walk(indexx,indexy);
-                }
-            }
-        }
-    });
 
     function reset(){
         socket.emit('reset','')
@@ -71,8 +58,28 @@ window.onload = function () {
     resetbutton.value='delete';
     resetdiv.appendChild(resetbutton);
 
-    //initial completed, start llistening to click event
+    //initial completed
 
+    //socket listener
+    socket.on('step', function(info) {
+        walk(info.x,info.y);
+    });
+
+    socket.on('init',function (board) {
+        console.log('reseeeet!!!')
+        mathboard=board;
+        console.log(mathboard);
+        for(var indexx in mathboard){
+            for(var indexy in mathboard[indexx]){
+                if(mathboard[indexx][indexy] !=-1){
+                    walk(indexx,indexy);
+                }
+            }
+        }
+    });
+    //socket listener end
+
+    //graphics
     function drawq(x,y,color){
         ext.beginPath();
         ext.arc(converter(x), converter(y),Math.floor(between/2.2),0,2*Math.PI);
@@ -82,12 +89,14 @@ window.onload = function () {
         ext.stroke();
         ext.closePath();
     }
-
+    //graphics end
     function walk(x,y) {
         drawq(x,y,colors[round]);
         round = (round + 1)%2;
     }
 
+
+    //clicking event listener
     var rect = canvas.getBoundingClientRect();
     function clickPos(event) {
         var x = event.clientX - rect.left;
@@ -107,5 +116,6 @@ window.onload = function () {
         }
         console.log(abx,aby)
     });
+    //clicking end
 
 };
