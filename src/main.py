@@ -61,7 +61,8 @@ def go(place):
 @socketio.on('reset', namespace='/socket')
 def reset(password):
     row = [-1, -1, -1, -1, -1,-1, -1, -1, -1, -1,-1, -1, -1, -1, -1]
-    global board
+    global board, step_by_step
+    step_by_step=[]
     board = []
     for i in xrange(0, 15):
         board.append(deepcopy(row))
@@ -90,4 +91,4 @@ def statics(path):
             pass
 
 
-socketio.run(app, port=100)
+socketio.run(app, port=100, host='0.0.0.0')

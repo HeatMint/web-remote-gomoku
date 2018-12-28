@@ -11,6 +11,7 @@ window.onload = function () {
 
     var board = document.getElementById('board');
     var canvas = document.createElement('canvas');
+    canvas.setAttribute('onclick','');
     board.appendChild(canvas);
     canvas.width = gamey;
     canvas.height = gamey;
@@ -27,12 +28,12 @@ window.onload = function () {
     }
 
     function converter(x) {
-        //function not nly used to init
+        //function not only used to init
         return (x)*between+border;
     }
 
     function drawc(x,y){
-        //function not nly used to init
+        //function not only used to init
         ext.beginPath();
         ext.arc(converter(x), converter(y),Math.floor(between/5),0,2*Math.PI);
         ext.fill();
@@ -45,7 +46,7 @@ window.onload = function () {
     drawc(3,11);
     drawc(11,11);
 
-    socket = io.connect('http://' + 'localhost' + ':' + '100/socket');
+    socket = io.connect('http://' + document.domain + ':' + '100/socket');
     socket.emit('connect','data');
 
     function reset(){
@@ -68,6 +69,7 @@ window.onload = function () {
 
     function walk(x,y) {
         drawq(x,y,colors[round]);
+        mathboard[x][y]=round;
         round = (round + 1)%2;
     }
 
@@ -93,6 +95,10 @@ window.onload = function () {
         ext.stroke();
         ext.closePath();
     }
+
+    function draw_over(x,y){
+        ext.moveTo(converter(x),converter(y));
+    }
     //graphics end
 
 
@@ -105,6 +111,19 @@ window.onload = function () {
     }
 
     document.addEventListener('click',function (ev) {
+        var position=clickPos(ev);
+        abx = Math.round(position.x/between);
+        aby = Math.round(position.y/between);
+        console.log(mathboard);
+        if(abx<15 && aby<15&&mathboard[abx][aby] ==-1){
+            console.log(mathboard[abx][aby]);
+            var place={x:abx,y:aby};
+            socket.emit('go',place)
+        }
+        console.log(abx,aby)
+    });
+
+    document.addEventListener('ontouchstart',function (ev) {
         var position=clickPos(ev);
         abx = Math.round(position.x/between);
         aby = Math.round(position.y/between);
