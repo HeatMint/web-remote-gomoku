@@ -68,6 +68,7 @@ def reset(password):
         board.append(deepcopy(row))
     for i in users:
         emit('init', [step_by_step,board],room=i)
+        emit('init', [step_by_step,board],room=i)#do not delete this line or you will see weird thing, trust me
     print(board)
     print('reset')
 

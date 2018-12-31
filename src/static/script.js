@@ -81,7 +81,7 @@ window.onload = function () {
         console.log(mathboard);
         console.log(stepbystep);
         for(var index in stepbystep){
-            walk(stepbystep[index][0],stepbystep[index][1])
+            walk(stepbystep[index][0],stepbystep[index][1]);
         }
     });
     //socket listener end
