@@ -66,7 +66,8 @@ def reset(password):
     board = []
     for i in xrange(0, 15):
         board.append(deepcopy(row))
-    emit('init', [step_by_step,board])
+    for i in users:
+        emit('init', [step_by_step,board],room=i)
     print(board)
     print('reset')
 

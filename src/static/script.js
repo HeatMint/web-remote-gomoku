@@ -18,15 +18,6 @@ window.onload = function () {
     canvas.style.backgroundColor = '#D5B092';
     var ext = canvas.getContext("2d");
 
-    for(i=0;i<15;i++){
-        ext.moveTo(border+(i*between),border);
-        ext.lineTo(border+(i*between),border+(14*between));
-        ext.stroke();
-        ext.moveTo(border,border+(i*between));
-        ext.lineTo(border+(14*between),border+(i*between));
-        ext.stroke();
-    }
-
     function converter(x) {
         //function not only used to init
         return (x)*between+border;
@@ -36,21 +27,16 @@ window.onload = function () {
         //function not only used to init
         ext.beginPath();
         ext.arc(converter(x), converter(y),Math.floor(between/5),0,2*Math.PI);
+        ext.fillStyle='#000000';
         ext.fill();
         ext.closePath();
     }
-
-    drawc(7,7);
-    drawc(3,3);
-    drawc(11,3);
-    drawc(3,11);
-    drawc(11,11);
 
     socket = io.connect('http://' + document.domain + ':' + '100/socket');
     socket.emit('connect','data');
 
     function reset(){
-        socket.emit('reset','')
+        socket.emit('reset','');
     }
 
     var resetdiv=document.getElementById('reset');
@@ -74,10 +60,25 @@ window.onload = function () {
     }
 
     socket.on('init',function (steps) {
-        console.log('reseeeet!!!')
+        ext.clearRect(0,0,gamey,gamey);
+        console.log('reseeeet!!!');
+
+        for(i=0;i<15;i++){
+            ext.moveTo(border+(i*between),border);
+            ext.lineTo(border+(i*between),border+(14*between));
+            ext.stroke();
+            ext.moveTo(border,border+(i*between));
+            ext.lineTo(border+(14*between),border+(i*between));
+            ext.stroke();
+        }
+        drawc(7,7);
+        drawc(3,3);
+        drawc(11,3);
+        drawc(3,11);
+        drawc(11,11);
         stepbystep=steps[0];
-        mathboard=steps[1]
-        console.log(mathboard)
+        mathboard=steps[1];
+        console.log(mathboard);
         console.log(stepbystep);
         for(var index in stepbystep){
             walk(stepbystep[index][0],stepbystep[index][1])
@@ -97,7 +98,28 @@ window.onload = function () {
     }
 
     function draw_over(x,y){
-        ext.moveTo(converter(x),converter(y));
+        var x=converter(x);
+        var y=converter(y);
+        var half_bet=between/2;
+        ext.clearRect(x-half_bet,y-half_bet,between,between);
+        ext.beginPath();
+        ext.strokeStyle='#000000';
+        for (var i = 0; i < 3; i++) {
+            //this loop seems unreasonable but if you try to delete it
+            //you will see what will happen
+            ext.moveTo(x-half_bet,y);
+            ext.lineTo(x+half_bet,y);
+            ext.stroke();
+            ext.moveTo(x,y-half_bet);
+            ext.lineTo(x,y+half_bet);
+            ext.stroke();
+        }
+        drawc(7,7);
+        drawc(3,3);
+        drawc(11,3);
+        drawc(3,11);
+        drawc(11,11);
+        ext.closePath();
     }
     //graphics end
 
