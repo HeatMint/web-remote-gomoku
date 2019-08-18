@@ -23,11 +23,11 @@ window.onload = function () {
         return (x)*between+border;
     }
 
-    function drawc(x,y){
+    function drawc(x,y,color){
         //function not only used to init
         ext.beginPath();
         ext.arc(converter(x), converter(y),Math.floor(between/5),0,2*Math.PI);
-        ext.fillStyle='#000000';
+        ext.fillStyle=color;
         ext.fill();
         ext.closePath();
     }
@@ -57,6 +57,22 @@ window.onload = function () {
         drawq(x,y,colors[round]);
         mathboard[x][y]=round;
         round = (round + 1)%2;
+        drawc(x,y,'red');
+        stepbystep=stepbystep.concat([[x,y]]);
+        try{
+            drawc(stepbystep[stepbystep.length-2][0],stepbystep[stepbystep.length-2][1],colors[round]);
+            drawc(stepbystep[stepbystep.length-2][0],stepbystep[stepbystep.length-2][1],colors[round]);
+            drawc(stepbystep[stepbystep.length-2][0],stepbystep[stepbystep.length-2][1],colors[round]);
+            drawc(stepbystep[stepbystep.length-2][0],stepbystep[stepbystep.length-2][1],colors[round]);
+            drawc(stepbystep[stepbystep.length-2][0],stepbystep[stepbystep.length-2][1],colors[round]);
+            drawc(stepbystep[stepbystep.length-2][0],stepbystep[stepbystep.length-2][1],colors[round]);
+            console.log(colors[(round+1)%2]);
+            console.log(stepbystep);
+            console.log(stepbystep[stepbystep.length-2]);
+        }
+        catch (e) {
+            console.log(e.message);
+        }
     }
 
     socket.on('init',function (steps) {
@@ -71,15 +87,13 @@ window.onload = function () {
             ext.lineTo(border+(14*between),border+(i*between));
             ext.stroke();
         }
-        drawc(7,7);
-        drawc(3,3);
-        drawc(11,3);
-        drawc(3,11);
-        drawc(11,11);
+        drawc(7,7,'black');
+        drawc(3,3,'black');
+        drawc(11,3,'black');
+        drawc(3,11,'black');
+        drawc(11,11,'black');
         stepbystep=steps[0];
         mathboard=steps[1];
-        console.log(mathboard);
-        console.log(stepbystep);
         for(var index in stepbystep){
             walk(stepbystep[index][0],stepbystep[index][1]);
         }
@@ -114,11 +128,11 @@ window.onload = function () {
             ext.lineTo(x,y+half_bet);
             ext.stroke();
         }
-        drawc(7,7);
-        drawc(3,3);
-        drawc(11,3);
-        drawc(3,11);
-        drawc(11,11);
+        drawc(7,7,'black');
+        drawc(3,3,'black');
+        drawc(11,3,'black');
+        drawc(3,11,'black');
+        drawc(11,11,'black');
         ext.closePath();
     }
     //graphics end
@@ -142,7 +156,6 @@ window.onload = function () {
             var place={x:abx,y:aby};
             socket.emit('go',place)
         }
-        console.log(abx,aby)
     });
 
     document.addEventListener('ontouchstart',function (ev) {

@@ -42,6 +42,32 @@ def disconnect():
 # connection end
 
 # processor start
+def iswin(x,y):
+    global board
+    print board
+    count=max(search(x,y,[1,0])+search(x,y,[-1,0]),search(x,y,[0,1])+search(x,y,[0,-1]),search(x,y,[1,1])+search(x,y,[-1,-1]),search(x,y,[1,-1])+search(x,y,[-1,1]))
+    print count
+    if count>=6:
+        print "win"
+
+
+def search(x,y, position):
+    global board
+    global color
+    count = 1
+    for i in range(1, 5):
+        try:
+            status = board[x + i*position[0]][y+i*position[1]]
+        except IndexError:
+            status = -1
+        if status == color:
+            count += 1
+        else:
+            print str(count)+str(position)
+            return count
+    print str(count) + str(position)
+    return count
+
 @socketio.on('go', namespace='/socket')
 def go(place):
     global color
@@ -52,6 +78,9 @@ def go(place):
     global board
     board[x][y] = color
     step_by_step.append([x,y])
+
+    iswin(x,y)
+
     print(step_by_step)
     color = (color + 1) % 2
     for i in users:
