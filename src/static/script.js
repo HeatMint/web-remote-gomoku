@@ -43,7 +43,7 @@ window.onload = function () {
     var resetbutton = document.createElement('input');
     resetbutton.type = 'button';
     resetbutton.onclick = reset;
-    resetbutton.value='delete';
+    resetbutton.value='reset game';
     resetdiv.appendChild(resetbutton);
 
     //initial completed
@@ -78,6 +78,7 @@ window.onload = function () {
     socket.on('init',function (steps) {
         ext.clearRect(0,0,gamey,gamey);
         console.log('reseeeet!!!');
+        round=0
 
         for(i=0;i<15;i++){
             ext.moveTo(border+(i*between),border);
@@ -98,6 +99,11 @@ window.onload = function () {
             walk(stepbystep[index][0],stepbystep[index][1]);
         }
     });
+
+    socket.on('win',function(color){
+    	alert(color+"wins");
+    	reset();
+    })
     //socket listener end
 
     //graphics

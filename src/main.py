@@ -49,6 +49,7 @@ def iswin(x,y):
     print count
     if count>=6:
         print "win"
+        return True
 
 
 def search(x,y, position):
@@ -78,19 +79,28 @@ def go(place):
     global board
     board[x][y] = color
     step_by_step.append([x,y])
+    for i in users:
+        emit('step', place, room=i)
 
-    iswin(x,y)
+    if iswin(x,y):
+        if color==0:
+            co="black"
+        else:
+            co="white"
+        for i in users:
+            emit('win', co, room=i)
+
 
     print(step_by_step)
     color = (color + 1) % 2
-    for i in users:
-        emit('step', place, room=i)
+
 
 
 @socketio.on('reset', namespace='/socket')
 def reset(password):
     row = [-1, -1, -1, -1, -1,-1, -1, -1, -1, -1,-1, -1, -1, -1, -1]
-    global board, step_by_step
+    global board, step_by_step, color
+    color=0
     step_by_step=[]
     board = []
     for i in xrange(0, 15):
