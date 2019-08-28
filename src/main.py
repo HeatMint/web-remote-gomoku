@@ -77,6 +77,8 @@ def go(place):
     x = place['x']
     y = place['y']
     global board
+    if [x, y] in step_by_step:
+        return
     board[x][y] = color
     step_by_step.append([x,y])
     for i in users:
