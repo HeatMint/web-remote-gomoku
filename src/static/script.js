@@ -54,6 +54,8 @@ window.onload = function () {
     resetdiv.appendChild(resetbutton);
 
     //initial completed
+};
+
 
 //socket listener
 socket.on('step', function(info) {
@@ -188,5 +190,3 @@ document.addEventListener('ontouchstart',function (ev) {
     console.log(abx,aby)
 });
 //clicking end
-
-};
