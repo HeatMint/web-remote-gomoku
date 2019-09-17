@@ -114,6 +114,18 @@ def reset(password):
     print('reset')
 
 
+@socketio.on('regret', namespace='/socket')
+def regret(place):
+    x=place[0]
+    y=place[1]
+    if place == step_by_step[-1]:
+        print "regret on "+str(step_by_step[-1])
+        for i in users:
+            emit('regret',step_by_step[-1],room=i)
+        step_by_step.pop()
+        board[x][y]=-1
+        print board
+
 # processor end
 
 
