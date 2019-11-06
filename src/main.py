@@ -105,7 +105,7 @@ def reset(password):
     color=0
     step_by_step=[]
     board = []
-    for i in xrange(0, 15):
+    for i in range(0, 15):
         board.append(deepcopy(row))
     for i in users:
         emit('init', [step_by_step,board],room=i)
@@ -116,6 +116,7 @@ def reset(password):
 
 @socketio.on('regret', namespace='/socket')
 def regret(place):
+    global color
     x=place[0]
     y=place[1]
     if place == step_by_step[-1]:
@@ -124,6 +125,7 @@ def regret(place):
             emit('regret',step_by_step[-1],room=i)
         step_by_step.pop()
         board[x][y]=-1
+        color = (color + 1) % 2
         print(board)
 
 # processor end
