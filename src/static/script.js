@@ -85,10 +85,10 @@ window.onload = function () {
         console.log(step, stepbystep[stepbystep.length - 1])
         if (step[0]===(stepbystep[stepbystep.length - 1])[0]&&step[1]===(stepbystep[stepbystep.length - 1])[1]) {
         console.log("can regret")
+        mathboard[step[0]][step[1]]=-1
         stepbystep.pop()
         draw_over(step[0],step[1])
         round = (round + 1)%2;
-        mathboard[step[0]][step[1]]=-1
 }
     })
 
@@ -168,11 +168,16 @@ window.onload = function () {
             ext.lineTo(x,finy);
             ext.stroke();
         }
-        drawc(7,7,'black');
-        drawc(3,3,'black');
-        drawc(11,3,'black');
-        drawc(3,11,'black');
-        drawc(11,11,'black');
+        function dotcheck(x,y){
+            if (mathboard[x][y]==-1) {
+                drawc(x,y,'black');
+            }
+        }
+        dotcheck(7,7);
+        dotcheck(3,3);
+        dotcheck(11,3);
+        dotcheck(3,11);
+        dotcheck(11,11);
         ext.closePath();
     }
     //graphics end
