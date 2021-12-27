@@ -3,6 +3,8 @@ from flask import send_file
 from flask import redirect
 from flask import request
 
+from flask import Flask, render_template
+
 from flask_socketio import SocketIO
 from flask_socketio import send, emit
 
@@ -14,12 +16,16 @@ users = []
 row = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 board = []
 step_by_step = []
+
+boards = []
+
 from copy import deepcopy
 
 for i in range(0, 15):
     board.append(deepcopy(row))
-print(len(board))
 
+for i in range(0,3):
+    boards.append(deepcopy(board))
 
 # socket start
 # connection
@@ -36,7 +42,8 @@ def connect():
 @socketio.on('disconnect', namespace='/socket')
 def disconnect():
     users.remove(request.sid)
-    print(users)
+    print(request.sid, "disconnected")
+    print("Remaaining: ",users)
 
 
 # connection end
@@ -115,7 +122,9 @@ def reset(password):
 
 
 @socketio.on('regret', namespace='/socket')
-def regret(place):
+def regret(place, board_id):
+
+    print("regret on board", board_id)
     global color
     x=place[0]
     y=place[1]

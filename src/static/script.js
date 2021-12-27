@@ -20,7 +20,8 @@ window.onload = function () {
     socket.emit('connect','data');
 
     function regret(){
-        socket.emit("regret",(stepbystep[stepbystep.length-1]))
+        //modified
+        socket.emit("regret",(stepbystep[stepbystep.length-1]),1)
         console.log(stepbystep[stepbystep.length-1])
     }
 
