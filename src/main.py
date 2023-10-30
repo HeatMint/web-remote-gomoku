@@ -29,8 +29,8 @@ for i in range(0,3):
 
 # socket start
 # connection
-@socketio.on('connect', namespace='/socket')
-def connect():
+@socketio.on('connected', namespace='/socket')
+def connected(data):
     sid = request.sid
     users.append(sid)
     emit('sid', sid)
@@ -157,4 +157,4 @@ def statics(path):
             pass
 
 
-socketio.run(app, port=100, host='0.0.0.0')
+socketio.run(app, port=100, host='0.0.0.0', allow_unsafe_werkzeug=True)

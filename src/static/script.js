@@ -1,6 +1,10 @@
 window.onload = function () {
-    socket = io.connect('http://' + document.domain + ':' + '100/socket');
-    y = window.screen.height * window.devicePixelRatio>=window.screen.width * window.devicePixelRatio?window.screen.width*0.65 * window.devicePixelRatio:window.screen.height*0.65 * window.devicePixelRatio;
+    socket = io('http://' + document.domain + ':' + '100/socket');
+    abs_height = window.innerHeight;
+    abs_width = window.innerWidth;
+
+    y = abs_height>=abs_width?abs_width:abs_height*0.8;
+    y = Math.floor(y)
     gamey = Math.floor(y);
     border = Math.round(gamey/20);
     between = Math.floor((gamey-2*border)/14);
@@ -17,7 +21,7 @@ window.onload = function () {
     canvas.style.backgroundColor = '#D5B092';
     ext = canvas.getContext("2d");
     //initial board and variables
-    socket.emit('connect','data');
+    socket.emit('connected','data');
 
     function regret(){
         //modified
@@ -94,6 +98,7 @@ window.onload = function () {
     })
 
     socket.on('init',function (steps) {
+        console.log(steps)
         ext.clearRect(0,0,gamey,gamey);
         console.log('reseeeet!!!');
         round=0
